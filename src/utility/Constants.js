@@ -48,7 +48,7 @@ class Constants {
         game: '=help',
         prefix: '=',
         botOwners: ['Luner#0059'],
-        ownerIds: ['226736342745219072']
+        ownerIds: ['226736342745219072', '316907525574230016']
       },
 
       regexes: {
@@ -96,6 +96,22 @@ class Constants {
         team2: Symbol(),
         undecided: Symbol(),
         canceled: Symbol()
+      },
+
+      chill: {
+        max: 3600,
+        min: 5,
+        defaultValue: 30
+      },
+
+      clear: {
+        max: 100,
+        min: 2,
+        cooldown: 1000
+      },
+
+      mute: {
+        defaultLength: 24
       }
     };
 

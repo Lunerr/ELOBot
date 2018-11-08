@@ -2,6 +2,8 @@ class User {
   constructor(userId, guildId) {
     this.userId = userId;
     this.guildId = guildId;
+    this.username = null;
+    this.registered = false;
     this.score = {
       points: 0,
       wins: 0,

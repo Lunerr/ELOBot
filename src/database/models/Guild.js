@@ -24,8 +24,6 @@ class Guild {
 
     this.registration = {
       message: 'Thank you for registering!',
-      defaultWinModifier: 10,
-      defaultLossModifier: 5,
       registrationBonus: 0,
       allowMultiRegistration: true,
       nameFormat: '[{0}] - {1}'

@@ -5,6 +5,7 @@ const NumberUtil = require('../utility/NumberUtil.js');
 const client = require('../structures/Client.js');
 const patron = require('patron.js');
 const handler = require('../structures/handler.js');
+const RankService = require('../services/RankService.js');
 const CONTEXTS = {
   [patron.Context.Guild]: 'server',
   [patron.Context.DM]: 'DMs'
@@ -20,6 +21,7 @@ client.on('message', async msg => {
   if (!inGuild) {
     msg.dbUser = await client.db.userRepo.getUser(msg.author.id, msg.guild.id);
     msg.dbGuild = await client.db.guildRepo.getGuild(msg.guild.id);
+    RankService.handle(msg.dbUser, msg.dbGuild, msg.member);
   }
 
   if (!Constants.data.regexes.prefix.test(msg.content)) {
