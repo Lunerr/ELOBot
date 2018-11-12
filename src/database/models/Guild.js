@@ -1,6 +1,7 @@
 class Guild {
   constructor(guildId) {
     this.guildId = guildId;
+
     this.roles = {
       mod: [],
       rank: [],
@@ -27,7 +28,7 @@ class Guild {
       registrationBonus: 0,
       allowMultiRegistration: true,
       nameFormat: '[{0}] - {1}'
-    }
+    };
     
     this.misc = {
       caseNumber: 1

@@ -30,7 +30,7 @@ class RankService {
     }
 
     if (member.roles.highest.position < member.guild.me.roles.highest.position && member.id !== member.guild.ownerID) {
-      member.setNickname(dbGuild.registration.nameFormat.format(dbUser.username, dbUser.score.points));
+      //member.setNickname(dbGuild.registration.nameFormat.format(dbUser.username, dbUser.score.points));
     }
 
     if (rolesToAdd.length > 0) {

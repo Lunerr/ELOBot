@@ -21,6 +21,7 @@ client.on('message', async msg => {
   if (!inGuild) {
     msg.dbUser = await client.db.userRepo.getUser(msg.author.id, msg.guild.id);
     msg.dbGuild = await client.db.guildRepo.getGuild(msg.guild.id);
+    msg.dbLobby = await client.db.lobbyRepo.getLobby(msg.channel.id);
     RankService.handle(msg.dbUser, msg.dbGuild, msg.member);
   }
 
@@ -75,5 +76,5 @@ client.on('message', async msg => {
     return msg.tryCreateErrorReply(message);
   }
 
-  return Logger.log('Successful command result: ' + msg.id + ' User: ' + msg.author.tag + ' User ID: ' + msg.author.id + ' Guild: ' + msg.guild.name + ' Content ' + msg.cleanContent, 'DEBUG');
+  return Logger.log('Successful command result: ' + msg.id + ' User: ' + msg.author.tag + ' User ID: ' + msg.author.id + ' Guild: ' + (!inGuild ? msg.guild.name : 'NA') + ' Content ' + msg.cleanContent, 'DEBUG');
 });

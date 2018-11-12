@@ -3,6 +3,7 @@ const Constants = require('../../utility/Constants.js');
 class Lobby {
   constructor(channelId) {
     this.channelId = channelId;
+    
     this.userLimit = 10;
     this.description = null;
     this.gamesPlayed = 0;

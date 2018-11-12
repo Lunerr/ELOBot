@@ -2,8 +2,10 @@ class User {
   constructor(userId, guildId) {
     this.userId = userId;
     this.guildId = guildId;
+    
     this.username = null;
     this.registered = false;
+
     this.score = {
       points: 0,
       wins: 0,
@@ -13,6 +15,13 @@ class User {
       deaths: 0,
       gamesPlayed: 0
     };
+
+    this.ban = {
+      banned: false,
+      reason: null,
+      expireTime: null,
+      moderator: null
+    }
   }
 }
 

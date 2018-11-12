@@ -3,6 +3,7 @@ const Constants = require('../../utility/Constants.js');
 class GameResult {
   constructor(lobbyId) {
     this.lobbyId = lobbyId;
+    
     this.result = Constants.config.result.undecided;
 
     this.dateTime = Date.now();

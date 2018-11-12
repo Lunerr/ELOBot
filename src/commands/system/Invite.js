@@ -4,7 +4,7 @@ const Constants = require('../../utility/Constants.js');
 class Invite extends patron.Command {
   constructor() {
     super({
-      names: ['invite', 'join', 'add'],
+      names: ['invite', 'add'],
       groupName: 'system',
       description: 'Add Bot to your server.',
       usableContexts: [patron.Context.DM, patron.Context.Guild]

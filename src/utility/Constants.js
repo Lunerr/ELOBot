@@ -45,8 +45,8 @@ class Constants {
             'WEBHOOKS_UPDATE'
           ]
         },
-        game: '=help',
-        prefix: '=',
+        game: '$help',
+        prefix: '$',
         botOwners: ['Luner#0059'],
         ownerIds: ['226736342745219072', '316907525574230016']
       },
@@ -54,48 +54,48 @@ class Constants {
       regexes: {
         capitalize: /\w\S*/g,
         escape: /[-[\]{}()*+?.,\\/^$|#\s]/g,
-        prefix: /^\=/
+        prefix: /^\$/
       }
     };
 
     this.config = {
       hostSelector: {
-        mostWins: Symbol(),
-        mostPoints: Symbol(),
-        highestWinLoss: Symbol(),
-        random: Symbol(),
-        none: Symbol()
+        mostWins: 'mostWins',
+        mostPoints: 'mostPoints',
+        highestWinLoss: 'highestWinLoss',
+        random: 'random',
+        none: 'none'
       },
 
       pickMode: {
-        completeRandom: Symbol(),
-        captains: Symbol(),
-        soryByScore: Symbol(),
-        pick2: Symbol()
+        completeRandom: 'completeRandom',
+        captains: 'captains',
+        soryByScore: 'soryByScore',
+        pick2: 'pick2'
       },
 
       captainSort: {
-        mostWins: Symbol(),
-        mostPoints: Symbol(),
-        highestWinLoss: Symbol(),
-        random: Symbol(),
-        randomTop4MostPoints: Symbol(),
-        randomTop4MostWins: Symbol(),
-        randomTop4HighestWinLoss: Symbol()
+        mostWins: 'mostWins',
+        mostPoints: 'mostPoints',
+        highestWinLoss: 'highestWinLoss',
+        random: 'random',
+        randomTop4MostPoints: 'randomTop4MostPoints',
+        randomTop4MostWins: 'randomTop4MostWins',
+        randomTop4HighestWinLoss: 'randomTop4HighestWinLoss'
       },
 
       mapSelector: {
-        cycle: Symbol(),
-        random: Symbol(),
-        noRepeat: Symbol(),
-        none: Symbol()
+        cycle: 'cycle',
+        random: 'random',
+        noRepeat: 'noRepeat',
+        none: 'none'
       },
 
       result: {
-        team1: Symbol(),
-        team2: Symbol(),
-        undecided: Symbol(),
-        canceled: Symbol()
+        team1: 'team1',
+        team2: 'team2',
+        undecided: 'undecided',
+        canceled: 'canceled'
       },
 
       chill: {
