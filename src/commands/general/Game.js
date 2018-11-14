@@ -11,6 +11,12 @@ class Game extends patron.Command {
       description: 'Submit a game result.',
       args: [
         new patron.Argument({
+          name: 'channel',
+          key: 'channel',
+          type: 'textchannel',
+          example: 'pugs'
+        }),
+        new patron.Argument({
           name: 'gameNumber',
           key: 'gameNumber',
           type: 'int',
@@ -21,13 +27,6 @@ class Game extends patron.Command {
           key: 'result',
           type: 'string',
           example: 'team1'
-        }),
-        new patron.Argument({
-          name: 'channel',
-          key: 'channel',
-          type: 'channel',
-          defaultValue: patron.ArgumentDefault.Channel,
-          example: 'pugs'
         })
       ]
     });
