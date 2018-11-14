@@ -19,7 +19,7 @@ class RemoveLobby extends patron.Command {
   }
 
   async run(msg, args) {
-    await msg.client.db.lobbyRepo.upsertLobby(msg.guild.id, { $set: { 'isALobby': false } });
+    await msg.client.db.lobbyRepo.upsertLobby(msg.channel.id, { $set: { 'isALobby': false } });
 
     return msg.createReply('you have successfully removed ' + args.channel.toString() + ' as a lobby.');
   }

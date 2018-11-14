@@ -8,7 +8,6 @@ require('dotenv').config();
   await require('./extensions');
 
   const client = require('./structures/Client.js');
-  const IntervalService = require('./services/IntervalService.js');
 
   await patron.RequireAll(path.join(__dirname, 'events'));
 
