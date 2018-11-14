@@ -11,6 +11,10 @@ class Leave extends patron.Command {
   }
 
   async run(msg) {
+    if (msg.dbLobby.isALobby === false) {
+      return msg.createErrorReply('this channel is not a lobby.');
+    }
+    
     if (msg.dbLobby.currentGame.queuedPlayerIDs.includes(msg.author.id)) {
       if (msg.dbLobby.currentGame.isPickingTeams === true) {
         return msg.createErrorReply('Currently picking teams. Please wait until this is completed.');

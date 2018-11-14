@@ -36,9 +36,8 @@ class Database {
     this.guildRepo = new GuildRepository(await db.createCollection('guilds'));
     this.userRepo = new UserRepository(await db.createCollection('users'));
     this.lobbyRepo = new LobbyRepository(await db.createCollection('lobby'));
-    this.gameResultRepo = new GameResultRepository(await db.createCollection('gameresults'));
+    this.gameResultRepo = new GameResultRepository(await db.createCollection('gameresult'));
 
-    await db.collection('gameresults').createIndex('lobbyId', { unique: true });
     await db.collection('lobby').createIndex('channelId', { unique: true });
     await db.collection('guilds').createIndex('guildId', { unique: true });
   }

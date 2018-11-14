@@ -4,17 +4,12 @@ class Lobby {
   constructor(channelId) {
     this.channelId = channelId;
     
+    this.isALobby = false;
     this.userLimit = 10;
     this.description = null;
-    this.gamesPlayed = 0;
-
-    this.hostSelectionMode = Constants.config.hostSelector.mostPoints;
-    this.mapMode = Constants.config.mapSelector.random;
+    this.gamesPlayed = 1;
 
     this.maps = [];
-
-    this.pickMode = Constants.config.pickMode.completeRandom;
-    this.captainSortMode = Constants.config.captainSort.mostPoints;
 
     this.mapInfo = {
       lastMapIndex: 0,

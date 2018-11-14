@@ -3,43 +3,43 @@ const GameResultQuery = require('../queries/GameResultQuery.js');
 const GameResult = require('../models/GameResult.js');
 
 class GameResultRepository extends BaseRepository {
-  anyGameResult(lobbyId) {
-    return this.any(new GameResultQuery(lobbyId));
+  anyGameResult(lobbyId, gameNumber) {
+    return this.any(new GameResultQuery(lobbyId, gameNumber));
   }
 
-  async getGameResult(lobbyId) {
-    const query = new GameResultQuery(lobbyId);
+  async getGameResult(lobbyId, gameNumber) {
+    const query = new GameResultQuery(lobbyId, gameNumber);
     const fetchedGuild = await this.findOne(query);
 
-    return fetchedGuild ? fetchedGuild : this.findOneAndReplace(query, new GameResult(lobbyId));
+    return fetchedGuild ? fetchedGuild : this.findOneAndReplace(query, new GameResult(lobbyId, gameNumber));
   }
 
-  updateGameResult(lobbyId, update) {
-    return this.updateOne(new GameResultQuery(lobbyId), update);
+  updateGameResult(lobbyId, gameNumber, update) {
+    return this.updateOne(new GameResultQuery(lobbyId, gameNumber), update);
   }
 
-  findGameResultAndUpdate(lobbyId, update) {
-    return this.findOneAndUpdate(new GameResultQuery(lobbyId), update);
+  findGameResultAndUpdate(lobbyId, gameNumber, update) {
+    return this.findOneAndUpdate(new GameResultQuery(lobbyId, gameNumber), update);
   }
 
-  async upsertGameResult(lobbyId, update) {
-    if (await this.anyGameResult(lobbyId)) {
-      return this.updateGameResult(lobbyId, update);
+  async upsertGameResult(lobbyId, gameNumber, update) {
+    if (await this.anyGameResult(lobbyId, gameNumber)) {
+      return this.updateGameResult(lobbyId, gameNumber, update);
     }
 
-    return this.updateOne(new GameResult(lobbyId), update, true);
+    return this.updateOne(new GameResult(lobbyId, gameNumber), update, true);
   }
 
-  async findGameResultAndUpsert(lobbyId, update) {
-    if (await this.anyGameResult(lobbyId)) {
-      return this.findGuildAndUpdate(lobbyId, update);
+  async findGameResultAndUpsert(lobbyId, gameNumber, update) {
+    if (await this.anyGameResult(lobbyId, gameNumber)) {
+      return this.findGuildAndUpdate(lobbyId, gameNumber, update);
     }
 
-    return this.findOneAndUpdate(new GameResult(lobbyId), update, true);
+    return this.findOneAndUpdate(new GameResult(lobbyId, gameNumber), update, true);
   }
 
-  deleteGameResult(lobbyId) {
-    return this.deleteOne(new GameResultQuery(lobbyId));
+  deleteGameResult(lobbyId, gameNumber) {
+    return this.deleteOne(new GameResultQuery(lobbyId, gameNumber));
   }
 }
 

@@ -1,6 +1,7 @@
 class GameResult {
-  constructor(lobbyID) {
-    this.lobbyID = lobbyID;
+  constructor(lobbyId, gameNumber) {
+    this.lobbyId = lobbyId;
+    this.gameNumber = gameNumber;
   }
 }
 

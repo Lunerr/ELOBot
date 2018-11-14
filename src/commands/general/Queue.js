@@ -11,13 +11,17 @@ class Queue extends patron.Command {
   }
 
   async run(msg) {
+    if (msg.dbLobby.isALobby === false) {
+      return msg.createErrorReply('this channel is not a lobby.');
+    }
+
     if (msg.dbLobby.currentGame.isPickingTeams === false) {
       if (msg.dbLobby.currentGame.queuedPlayerIDs.length > 0) {
         let reply = '';
         const queuedIds = msg.dbLobby.currentGame.queuedPlayerIDs;
 
         for (let i = 0; i < queuedIds.length; i++) {
-          reply += msg.client.users.get(queuedIds[i]).tag + '\n';
+          reply += queuedIds[i].mention() + '\n';
         }
 
         return msg.channel.createMessage(reply, { title: `Player List [${queuedIds.length}/${msg.dbLobby.userLimit}]`});
@@ -28,16 +32,21 @@ class Queue extends patron.Command {
       const currentGame = msg.dbLobby.currentGame;
       let team1 = '';
       let team2 = '';
+      let playerPool = '';
 
-      for (let i = 0; i < currentGame.team1.players.length; i++) {
-        team1 += msg.client.users.get(currentGame.team1.players[i]).tag + '\n';
-        team2 += msg.client.users.get(currentGame.team2.players[i]).tag + '\n';
+      for (let i = 0; i < 10; i++) {
+        team1 += currentGame.team1.players[i] !== undefined ? currentGame.team1.players[i].mention() + ', ' : '';
+        team2 += currentGame.team2.players[i] !== undefined ? currentGame.team2.players[i].mention() + ', ' : '';
       }
 
-      return msg.channel.createMessage('**Team 1:** ' + team1 + '\n\n' +
-                                      '**Team 2:** ' + team2 + '\n\n' +
+      for (let i = 0; i < currentGame.queuedPlayerIDs.length; i++) {
+        playerPool += currentGame.queuedPlayerIDs[i].mention() + ' | ';
+      }
+
+      return msg.channel.createMessage('**Team 1:** ' + team1.substring(0, team1.length - 2) + '\n\n' +
+                                      '**Team 2:** ' + team2.substring(0, team2.length - 2) + '\n\n' +
                                       '**Player Pool**\n' +
-                                      team1 + team2);
+                                      playerPool.substring(0, playerPool.length - 2));
     }
   }
 }

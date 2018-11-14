@@ -1,23 +1,22 @@
 const Constants = require('../../utility/Constants.js');
 
 class GameResult {
-  constructor(lobbyId) {
+  constructor(lobbyId, gameNumber) {
     this.lobbyId = lobbyId;
+    this.gameNumber = gameNumber;
     
     this.result = Constants.config.result.undecided;
 
     this.dateTime = Date.now();
-
-    this.gameNumber = null;
 
     this.team1 = [];
     this.team2 = [];
 
     this.proposal = {
       p1: 0,
-      r1: Constants.result.undecided,
+      r1: Constants.config.result.undecided,
       p2: 0,
-      r2: Constants.result.undecided
+      r2: Constants.config.result.undecided
     };
 
     this.comments = {

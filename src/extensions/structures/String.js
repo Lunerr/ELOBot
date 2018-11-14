@@ -19,6 +19,10 @@ String.prototype.upperString = function () {
   return this.toUpperCase();
 };
 
+String.prototype.mention = function () {
+  return '<@' + this + '>';
+};
+
 String.prototype.format = function () {
   const args = arguments;
 

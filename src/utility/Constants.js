@@ -45,8 +45,8 @@ class Constants {
             'WEBHOOKS_UPDATE'
           ]
         },
-        game: '$help',
-        prefix: '$',
+        game: '+help',
+        prefix: '+',
         botOwners: ['Luner#0059'],
         ownerIds: ['226736342745219072', '316907525574230016']
       },
@@ -54,7 +54,7 @@ class Constants {
       regexes: {
         capitalize: /\w\S*/g,
         escape: /[-[\]{}()*+?.,\\/^$|#\s]/g,
-        prefix: /^\$/
+        prefix: /^\+/
       }
     };
 

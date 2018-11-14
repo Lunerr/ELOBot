@@ -30,7 +30,7 @@ class RankService {
     }
 
     if (member.roles.highest.position < member.guild.me.roles.highest.position && member.id !== member.guild.ownerID) {
-      //member.setNickname(dbGuild.registration.nameFormat.format(dbUser.username, dbUser.score.points));
+      member.setNickname(dbGuild.registration.nameFormat.format(dbUser.score.points, dbUser.username));
     }
 
     if (rolesToAdd.length > 0) {
@@ -53,6 +53,25 @@ class RankService {
     if (role === undefined) {
       return 'unranked';
     }
+
+    return role;
+  }
+
+  getGuildRank(dbUser, dbGuild) {
+    let role;
+    const points = dbUser.score.points;
+
+    for (const rank of dbGuild.roles.rank.sort((a, b) => a.threshold - b.threshold)) {
+      if (points >= rank.threshold) {
+        role = dbGuild.roles.rank.find(x => x.id === rank.id);
+      }
+    }
+
+    if (role === undefined) {
+      return 'unranked';
+    }
+
+    console.log(role);
 
     return role;
   }

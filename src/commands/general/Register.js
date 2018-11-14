@@ -47,7 +47,7 @@ class Register extends patron.Command {
     }
 
     if (msg.member.roles.highest.position < msg.member.guild.me.roles.highest.position && msg.member.id !== msg.member.guild.ownerID) {
-      msg.member.setNickname(msg.dbGuild.registration.nameFormat.format(username, msg.dbUser.score.points));
+      msg.member.setNickname(msg.dbGuild.registration.nameFormat.format(msg.dbUser.score.points, username));
     }
 
     return;
