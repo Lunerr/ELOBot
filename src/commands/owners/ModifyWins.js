@@ -28,7 +28,7 @@ class ModifyWins extends patron.Command {
   async run(msg, args) {
     const wins = 'score.wins';
 
-    await msg.client.db.userRepo.updateUser(msg.author.id, msg.guild.id, { $set: { [wins]: args.amount }});
+    await msg.client.db.userRepo.updateUser(args.member.id, msg.guild.id, { $set: { [wins]: args.amount }});
 
     const newDbUser = await msg.client.db.userRepo.getUser(args.member.id, msg.guild.id);
 

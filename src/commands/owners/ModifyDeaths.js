@@ -28,7 +28,7 @@ class ModifyDeaths extends patron.Command {
   async run(msg, args) {
     const deaths = 'score.deaths';
 
-    await msg.client.db.userRepo.updateUser(msg.author.id, msg.guild.id, { $set: { [deaths]: args.amount }});
+    await msg.client.db.userRepo.updateUser(args.member.id, msg.guild.id, { $set: { [deaths]: args.amount }});
 
     const newDbUser = await msg.client.db.userRepo.getUser(args.member.id, msg.guild.id);
 
