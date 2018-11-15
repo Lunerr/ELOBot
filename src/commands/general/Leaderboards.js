@@ -21,13 +21,11 @@ class Leaderboards extends patron.Command {
         break;
       }
 
-      const user = msg.client.users.get(users[i].userId);
-
-      if (!user) {
+      if (users[i].registered === false) {
         continue;
       }
 
-      message += i + 1 + '. ' + user.tag.boldify() + ': ' + users[i].score.points + '\n';
+      message += i + 1 + '. ' + users[i].username.boldify() + ': ' + users[i].score.points + '\n';
     }
 
     if (String.isNullOrWhiteSpace(message)) {

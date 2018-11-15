@@ -134,12 +134,23 @@ class Pick extends patron.Command {
 
       await msg.client.db.lobbyRepo.upsertLobby(msg.channel.id, { $inc: { 'gamesPlayed': 1 }});
 
+      const map = Random.arrayElement(msg.dbLobby.maps);
+
+      const update = {
+        $set: {
+          'currentGame': Constants.config.currentGame,
+          'mapInfo.lastMap': map
+        }
+      };
+
+      await msg.client.db.lobbyRepo.upsertLobby(msg.channel.id, update);
+
       const embed = new MessageEmbed()
       .setColor(Random.arrayElement(Constants.data.colors.defaults))
       .addField('Game Info', 'Lobby: <#' + msg.channel + '>\nGame: ' + msg.dbLobby.gamesPlayed)
       .addField('Team 1', team1)
       .addField('Team 2', team2.substring(0, team2.length - 2))
-      .addField('Map', Random.arrayElement(msg.dbLobby.maps))
+      .addField('Map', map)
       .addField('Selected Host', host.mention());
 
       return msg.channel.send({ embed });

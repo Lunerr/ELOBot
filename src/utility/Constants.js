@@ -98,6 +98,24 @@ class Constants {
         canceled: 'canceled'
       },
 
+      currentGame = {
+        isPickingTeams: false,
+        queuedPlayerIDs: [],
+        pickIndex: 0,
+  
+        team1: {
+          players: [],
+          captain: null,
+          turnToPick: false
+        },
+  
+        team2: {
+          players: [],
+          captain: null,
+          turnToPick: false
+        }
+      },
+
       chill: {
         max: 3600,
         min: 5,
