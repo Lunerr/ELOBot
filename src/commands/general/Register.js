@@ -32,7 +32,7 @@ class Register extends patron.Command {
 
       await msg.client.db.userRepo.updateUser(msg.author.id, msg.guild.id, { $set: { username: username }});
 
-      await msg.channel.createMessage('You have re-registered.\n**Name:** ' + msg.dbUser.username + ' => ' + username + '\nRole\'s have been updated\nStates have been saved.');
+      await msg.channel.createMessage('You have re-registered.\n**Name:** ' + msg.dbUser.username + ' => ' + username + '\nRole\'s have been updated\nStats have been saved.');
     } else {
       const update = {
         $set: {

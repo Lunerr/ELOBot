@@ -136,14 +136,14 @@ class Pick extends patron.Command {
 
       const map = Random.arrayElement(msg.dbLobby.maps);
 
-      const update = {
+      const updateNew = {
         $set: {
           'currentGame': Constants.config.currentGame,
           'mapInfo.lastMap': map
         }
       };
 
-      await msg.client.db.lobbyRepo.upsertLobby(msg.channel.id, update);
+      await msg.client.db.lobbyRepo.upsertLobby(msg.channel.id, updateNew);
 
       const embed = new MessageEmbed()
       .setColor(Random.arrayElement(Constants.data.colors.defaults))
