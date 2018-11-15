@@ -89,8 +89,8 @@ class Pick extends patron.Command {
     let playerPool = '';
 
     for (let i = 0; i < 10; i++) {
-      team1 += newCurrentGame.team1.players[i] !== undefined ? newCurrentGame.team1.players[i].mention() + ', ' : '';
-      team2 += newCurrentGame.team2.players[i] !== undefined ? newCurrentGame.team2.players[i].mention() + ', ' : '';
+      team1 += newCurrentGame.team1.players[i] !== undefined ? newCurrentGame.team1.players[i].mention() + ' | ' : '';
+      team2 += newCurrentGame.team2.players[i] !== undefined ? newCurrentGame.team2.players[i].mention() + ' | ' : '';
     }
 
     for (let i = 0; i < newCurrentGame.queuedPlayerIDs.length; i++) {
@@ -104,9 +104,12 @@ class Pick extends patron.Command {
       // pull from queue
       await msg.client.db.lobbyRepo.upsertLobby(msg.channel.id, { $pull: { 'currentGame.queuedPlayerIDs': newCurrentGame.queuedPlayerIDs[0] } });
 
-      team1 += newCurrentGame.queuedPlayerIDs[0].mention();
+      const lastPlayerLobby = await msg.client.db.lobbyRepo.getLobby(msg.channel.id);
+      const newLastPlayerGame = lastPlayerLobby.currentGame;
 
-      const fullTeam = newCurrentGame.team1.players.concat(newCurrentGame.team2.players);
+      team1 += newLastPlayerGame.queuedPlayerIDs[0].mention();
+
+      const fullTeam = newLastPlayerGame.team1.players.concat(newLastPlayerGame.team2.players);
       let hosts = [];
 
       for (let i = 0; i < fullTeam.length; i++){
@@ -124,8 +127,8 @@ class Pick extends patron.Command {
           'gameNumber': newLobby.gamesPlayed,
           'lobbyId': msg.channel.id,
           'result': Constants.config.result.undecided,
-          'team1': newCurrentGame.team1.players,
-          'team2': newCurrentGame.team2.players,
+          'team1': newLastPlayerGame.team1.players,
+          'team2': newLastPlayerGame.team2.players,
           'time': Date.now()
         }
       };
