@@ -107,7 +107,7 @@ class Pick extends patron.Command {
       const lastPlayerLobby = await msg.client.db.lobbyRepo.getLobby(msg.channel.id);
       const newLastPlayerGame = lastPlayerLobby.currentGame;
 
-      team1 += newLastPlayerGame.queuedPlayerIDs[0].mention();
+      team1 += newCurrentGame.queuedPlayerIDs[0].mention();
 
       const fullTeam = newLastPlayerGame.team1.players.concat(newLastPlayerGame.team2.players);
       let hosts = [];
