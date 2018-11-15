@@ -98,7 +98,7 @@ class Constants {
         canceled: 'canceled'
       },
 
-      currentGame = {
+      currentGame: {
         isPickingTeams: false,
         queuedPlayerIDs: [],
         pickIndex: 0,
