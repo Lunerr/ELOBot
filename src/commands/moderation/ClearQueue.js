@@ -1,4 +1,5 @@
 const patron = require('patron.js');
+const Constants = require('../../utility/Constants.js');
 
 class ClearQueue extends patron.Command {
   constructor() {
@@ -10,8 +11,13 @@ class ClearQueue extends patron.Command {
   }
 
   async run(msg, args) {
-    await msg.client.db.lobbyRepo.upsertLobby(msg.channel.id, { $set: { 'currentGame.queuedPlayerIDs': [] } });
+    const update = {
+      $set: {
+        'currentGame': Constants.config.currentGame
+      }
+    };
 
+    await msg.client.db.lobbyRepo.upsertLobby(msg.channel.id, update);
     return msg.createReply('you have successfully cleared the queue.');
   }
 }
