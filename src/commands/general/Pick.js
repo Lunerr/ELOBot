@@ -173,7 +173,7 @@ class Pick extends patron.Command {
 
       const embed = new MessageEmbed()
       .setColor(Random.arrayElement(Constants.data.colors.defaults))
-      .addField('Game Info', 'Lobby: ' + msg.channel.name + '\nGame: ' + msg.dbLobby.gamesPlayed)
+      .addField('Game Info', 'Lobby: <#' + msg.channel.name + '>\nGame: ' + msg.dbLobby.gamesPlayed)
       .addField('Team 1', team1)
       .addField('Team 2', team2.substring(0, team2.length - 2))
       .addField('Map', map)
