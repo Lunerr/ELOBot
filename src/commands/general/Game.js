@@ -110,7 +110,8 @@ class Game extends patron.Command {
         const updateLoss = {
           $inc: {
             'score.points': -maxRank.lossModifier,
-            'score.losses': 1
+            'score.losses': 1,
+            'score.gamesPlayed': 1
           }
         };
         
@@ -127,14 +128,6 @@ class Game extends patron.Command {
 
       await RankService.handle(dbUser, msg.dbGuild, user);
     }
-
-    const update = {
-      $inc: {
-        'score.gamesPlayed': 1
-      }
-    };
-      
-    await msg.client.db.userRepo.updateUser(user.id, msg.guild.id, update);
 
     const updateGame = {
       $set: {
