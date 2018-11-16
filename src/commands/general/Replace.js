@@ -43,7 +43,7 @@ class Replace extends patron.Command {
       await msg.client.db.lobbyRepo.upsertLobby(msg.channel.id, { $push: { 'currentGame.team2.players': msg.author.id } });
     }
 
-    return msg.channel.createMessage('Success, ' + msg.author + ' replaced ' + args.user + '.');
+    return msg.channel.createMessage('Success, ' + msg.author.id.mention() + ' replaced ' + args.user.id.mention() + '.');
   }
 }
 
