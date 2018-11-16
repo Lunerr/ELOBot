@@ -116,14 +116,6 @@ class Pick extends patron.Command {
         if (msg.guild.members.get(fullTeam[i]).roles.find(x => x.id === '512116723202260992')) {
           hosts.push(fullTeam[i]);
         }
-
-        const user = msg.client.users.get(fullTeam[i]);
-
-        const dmEmbed = new MessageEmbed()
-        .setColor(Random.arrayElement(Constants.data.colors.defaults))
-        .setTitle('Game has Started')
-        .addField('Game Info')
-        await user.tryDM({ embed: dmEmbed });
       }
 
       const host = hosts.length <= 0 ? Random.arrayElement(fullTeam) : Random.arrayElement(hosts);
@@ -159,7 +151,7 @@ class Pick extends patron.Command {
         .addField('Map', map)
         .addField('Selected Host', host.mention());
 
-        await user.tryDM({ embed: dmEmbed });
+        await user.send({ embed: dmEmbed });
       }
 
       const updateNew = {
