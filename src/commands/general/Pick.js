@@ -116,6 +116,14 @@ class Pick extends patron.Command {
         if (msg.guild.members.get(fullTeam[i]).roles.find(x => x.id === '512116723202260992')) {
           hosts.push(fullTeam[i]);
         }
+
+        const user = msg.client.users.get(fullTeam[i]);
+
+        const dmEmbed = new MessageEmbed()
+        .setColor(Random.arrayElement(Constants.data.colors.defaults))
+        .setTitle('Game has Started')
+        .addField('Game Info')
+        await user.tryDM({ embed: dmEmbed });
       }
 
       const host = hosts.length <= 0 ? Random.arrayElement(fullTeam) : Random.arrayElement(hosts);
@@ -132,12 +140,27 @@ class Pick extends patron.Command {
           'time': Date.now()
         }
       };
-  
+
       await msg.client.db.gameResultRepo.updateGameResult(msg.channel.id, newLobby.gamesPlayed, update);
 
       await msg.client.db.lobbyRepo.upsertLobby(msg.channel.id, { $inc: { 'gamesPlayed': 1 }});
 
       const map = Random.arrayElement(msg.dbLobby.maps);
+
+      for (let i = 0; i < fullTeam.length; i++){
+        const user = msg.client.users.get(fullTeam[i]);
+
+        const dmEmbed = new MessageEmbed()
+        .setColor(Random.arrayElement(Constants.data.colors.defaults))
+        .setTitle('Game has Started')
+        .addField('Game Info', 'Lobby: ' + msg.channel.name + '\nGame: ' + msg.dbLobby.gamesPlayed)
+        .addField('Team 1', team1)
+        .addField('Team 2', team2.substring(0, team2.length - 2))
+        .addField('Map', map)
+        .addField('Selected Host', host.mention());
+
+        await user.tryDM({ embed: dmEmbed });
+      }
 
       const updateNew = {
         $set: {
@@ -150,7 +173,7 @@ class Pick extends patron.Command {
 
       const embed = new MessageEmbed()
       .setColor(Random.arrayElement(Constants.data.colors.defaults))
-      .addField('Game Info', 'Lobby: <#' + msg.channel + '>\nGame: ' + msg.dbLobby.gamesPlayed)
+      .addField('Game Info', 'Lobby: ' + msg.channel.name + '\nGame: ' + msg.dbLobby.gamesPlayed)
       .addField('Team 1', team1)
       .addField('Team 2', team2.substring(0, team2.length - 2))
       .addField('Map', map)
