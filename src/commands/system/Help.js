@@ -29,7 +29,13 @@ class Help extends patron.Command {
       return msg.createErrorReply('this command does not exist.');
     }
 
-    return msg.channel.createMessage('**Description:** ' + command.description + '\n**Usage:** `' + Constants.data.misc.prefix + command.getUsage() + '`\n**Example:** `' + Constants.data.misc.prefix + command.getExample() + '`', { title: command.names[0].upperFirstChar() });
+    let aliases = '';
+
+    for (let i = 1; i < command.names.length; i++) {
+      aliases += command.names[i] + ', ';
+    }
+
+    return msg.channel.createMessage(String.isNullOrWhiteSpace(aliases) ? '' : '**Aliases:** ' + aliases.substring(0, aliases.length - 2) + '\n**Description:** ' + command.description + '\n**Usage:** `' + Constants.data.misc.prefix + command.getUsage() + '`\n**Example:** `' + Constants.data.misc.prefix + command.getExample() + '`', { title: command.names[0].upperFirstChar() });
   }
 }
 

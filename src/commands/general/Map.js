@@ -11,6 +11,10 @@ class Map extends patron.Command {
   }
 
   async run(msg) {
+    if (msg.dbLobby.isALobby === false) {
+      return msg.createErrorReply('this channel isn\'t a lobby.');
+    }
+    
     const map = Random.arrayElement(msg.dbLobby.maps);
 
     return msg.createReply(map + ' has been chosen.');

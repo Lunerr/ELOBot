@@ -88,7 +88,7 @@ class Pick extends patron.Command {
     let team2 = '';
     let playerPool = '';
 
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < msg.dbLobby.userLimit; i++) {
       team1 += newCurrentGame.team1.players[i] !== undefined ? newCurrentGame.team1.players[i].mention() + ' | ' : '';
       team2 += newCurrentGame.team2.players[i] !== undefined ? newCurrentGame.team2.players[i].mention() + ' | ' : '';
     }
@@ -99,15 +99,20 @@ class Pick extends patron.Command {
 
     if (newCurrentGame.queuedPlayerIDs.length <= 1) {
       // push into team
-      await msg.client.db.lobbyRepo.upsertLobby(msg.channel.id, { $push: { 'currentGame.team1.players': newCurrentGame.queuedPlayerIDs[0] } });
+
+      if (newCurrentGame.team1.players.length + 1 <= newCurrentGame.team2.players.length) {
+        await msg.client.db.lobbyRepo.upsertLobby(msg.channel.id, { $push: { 'currentGame.team1.players': newCurrentGame.queuedPlayerIDs[0] } });
+        team1 += newCurrentGame.queuedPlayerIDs[0].mention() + ', ';
+      } else {
+        await msg.client.db.lobbyRepo.upsertLobby(msg.channel.id, { $push: { 'currentGame.team2.players': newCurrentGame.queuedPlayerIDs[0] } });
+        team2 += newCurrentGame.queuedPlayerIDs[0].mention() + ', ';
+      }
 
       // pull from queue
       await msg.client.db.lobbyRepo.upsertLobby(msg.channel.id, { $pull: { 'currentGame.queuedPlayerIDs': newCurrentGame.queuedPlayerIDs[0] } });
 
       const lastPlayerLobby = await msg.client.db.lobbyRepo.getLobby(msg.channel.id);
       const newLastPlayerGame = lastPlayerLobby.currentGame;
-
-      team1 += newCurrentGame.queuedPlayerIDs[0].mention();
 
       const fullTeam = newLastPlayerGame.team1.players.concat(newLastPlayerGame.team2.players);
       let hosts = [];
@@ -146,7 +151,7 @@ class Pick extends patron.Command {
         .setColor(Random.arrayElement(Constants.data.colors.defaults))
         .setTitle('Game has Started')
         .addField('Game Info', 'Guild: ' + msg.guild.name + '\nLobby: ' + msg.channel.name + '\nGame: ' + msg.dbLobby.gamesPlayed)
-        .addField('Team 1', team1)
+        .addField('Team 1', team1.substring(0, team1.length - 2))
         .addField('Team 2', team2.substring(0, team2.length - 2))
         .addField('Map', map)
         .addField('Selected Host', host.mention());
@@ -166,7 +171,7 @@ class Pick extends patron.Command {
       const embed = new MessageEmbed()
       .setColor(Random.arrayElement(Constants.data.colors.defaults))
       .addField('Game Info', 'Lobby: <#' + msg.channel + '>\nGame: ' + msg.dbLobby.gamesPlayed)
-      .addField('Team 1', team1)
+      .addField('Team 1', team1.substring(0, team1.length - 2))
       .addField('Team 2', team2.substring(0, team2.length - 2))
       .addField('Map', map)
       .addField('Selected Host', host.mention());

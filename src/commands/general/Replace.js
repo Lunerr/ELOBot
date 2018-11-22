@@ -20,6 +20,10 @@ class Replace extends patron.Command {
   async run(msg, args) {
     const game = msg.dbLobby.currentGame;
 
+    if (msg.dbUser.registered === false) {
+      return msg.createErrorReply('you have not registered yet.');
+    }
+
     if (game.queuedPlayerIDs.includes(args.user.id) === false && game.team1.players.includes(args.user.id) === false && game.team2.players.includes(args.user.id) === false) {
       return msg.createErrorReply('user is not queued.');
     }

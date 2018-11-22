@@ -98,6 +98,17 @@ class Constants {
         canceled: 'canceled'
       },
 
+      user: {
+        userId: null,
+        points: 0,
+        wins: 0,
+        losses: 0,
+        draws: 0,
+        kills: 0,
+        deaths: 0,
+        gamesPlayed: 0
+      },
+
       currentGame: {
         isPickingTeams: false,
         queuedPlayerIDs: [],

@@ -19,10 +19,19 @@ client.on('message', async msg => {
   const inGuild = !msg.guild;
 
   if (!inGuild) {
+    guildLeaderboards = await msg.client.db.leaderboardRepo.findMany({ guildId: msg.guild.id });
     msg.dbUser = await client.db.userRepo.getUser(msg.author.id, msg.guild.id);
     msg.dbGuild = await client.db.guildRepo.getGuild(msg.guild.id);
     msg.dbLobby = await client.db.lobbyRepo.getLobby(msg.channel.id);
-    RankService.handle(msg.dbUser, msg.dbGuild, msg.member);
+    msg.dbLeaderboard = guildLeaderboards.find(x => x.lobbies.includes(msg.channel.id));
+
+    if (msg.dbLeaderboard !== undefined) {
+      msg.lbUser = msg.dbLeaderboard.users.find(x => x.userId === msg.author.id);
+    }
+
+    if (msg.lbUser !== undefined) {
+      RankService.handle(msg.dbUser, msg.lbUser, msg.dbGuild, msg.member);
+    }
   }
 
   if (!Constants.data.regexes.prefix.test(msg.content)) {
@@ -71,10 +80,10 @@ client.on('message', async msg => {
         break;
     }
 
-    Logger.log('Unsuccessful command result: ' + msg.id + ' User: ' + msg.author.tag + ' User ID: ' + msg.author.id + ' Guild: ' + (!inGuild ? msg.guild.name : 'NA') + ' Content ' + msg.cleanContent + ' | Reason: ' + result.errorReason, 'DEBUG');
+    Logger.log('Unsuccessful command result: ' + msg.id + ' User: ' + msg.author.tag + ' User ID: ' + msg.author.id + ' Guild: ' + (!inGuild ? msg.guild.name : 'NA') + ' Content: ' + msg.cleanContent + ' | Reason: ' + result.errorReason, 'DEBUG');
 
     return msg.tryCreateErrorReply(message);
   }
 
-  return Logger.log('Successful command result: ' + msg.id + ' User: ' + msg.author.tag + ' User ID: ' + msg.author.id + ' Guild: ' + (!inGuild ? msg.guild.name : 'NA') + ' Content ' + msg.cleanContent, 'DEBUG');
+  return Logger.log('Successful command result: ' + msg.id + ' User: ' + msg.author.tag + ' User ID: ' + msg.author.id + ' Guild: ' + (!inGuild ? msg.guild.name : 'NA') + ' Content: ' + msg.cleanContent, 'DEBUG');
 });

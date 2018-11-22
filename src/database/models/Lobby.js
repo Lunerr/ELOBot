@@ -4,6 +4,7 @@ class Lobby {
   constructor(channelId) {
     this.channelId = channelId;
     
+    this.leaderboard = null;
     this.isALobby = false;
     this.userLimit = 10;
     this.description = null;

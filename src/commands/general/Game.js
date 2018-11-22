@@ -33,8 +33,15 @@ class Game extends patron.Command {
   }
 
   async run(msg, args) {
+    let leaderboards = await msg.client.db.leaderboardRepo.findMany({ guildId: msg.guild.id });
+    let dbLeaderboard = leaderboards.find(x => x.lobbies.includes(args.channel.id));
+
+    if (dbLeaderboard === undefined) {
+      return msg.createErrorReply('this lobby channel isn\'t assigned to a leaderboard.');
+    }
+
     if (!msg.member.roles.find(x => x.id === '499981512205139993')) {
-      return msg.createErrorReply('you are not a score reporter.');
+      //return msg.createErrorReply('you are not a score reporter.');
     }
 
     const selectedGame = await msg.client.db.gameResultRepo.getGameResult(args.channel.id, args.gameNumber);
@@ -80,53 +87,51 @@ class Game extends patron.Command {
       }
 
       var dbUser = await msg.client.db.userRepo.getUser(user.id, msg.guild.id);
-      const maxRank = RankService.getGuildRank(dbUser, msg.dbGuild);
-
-      if (args.result.toLowerCase() === Constants.config.result.team1 && selectedGame.team1.includes(user.id)) {
-        const updateWin = {
-          $set: {
-            'score.points': dbUser.score.points + maxRank.winsModifier,
-            'score.wins': dbUser.score.wins + 1
-          }
-        };
-        
-        await msg.client.db.userRepo.updateUser(user.id, msg.guild.id, updateWin);
-        const newUser = await msg.client.db.userRepo.getUser(user.id, msg.guild.id);
-
-        winEmbed.addField(dbUser.username + ' (+' + maxRank.winsModifier + ')', 'Points: ' + newUser.score.points + '\nWins: ' + newUser.score.wins);
-      } else if (args.result.toLowerCase() === Constants.config.result.team2 && selectedGame.team2.includes(user.id)) {
-        const updateWin = {
-          $inc: {
-            'score.points': maxRank.winsModifier,
-            'score.wins': 1
-          }
-        };
-        
-        await msg.client.db.userRepo.updateUser(user.id, msg.guild.id, updateWin);
-        const newUser = await msg.client.db.userRepo.getUser(user.id, msg.guild.id);
-
-        winEmbed.addField(dbUser.username + ' (+' + maxRank.winsModifier + ')', 'Points: ' + newUser.score.points + '\nWins: ' + newUser.score.wins);
-      } else {
-        const updateLoss = {
-          $inc: {
-            'score.points': -maxRank.lossModifier,
-            'score.losses': 1,
-            'score.gamesPlayed': 1
-          }
-        };
-        
-        await msg.client.db.userRepo.updateUser(user.id, msg.guild.id, updateLoss);
-
-        if (dbUser.score.points - maxRank.lossModifier < 0) {
-          await msg.client.db.userRepo.updateUser(user.id, msg.guild.id, { $set: { 'score.points': 0 }});
-        }
-
-        const lostUser = await msg.client.db.userRepo.getUser(user.id, msg.guild.id);
-
-        loseEmbed.addField(dbUser.username + ' (-' + maxRank.lossModifier + ')', 'Points: ' + lostUser.score.points + '\nLosses: ' + lostUser.score.losses);
+      let lbUser = dbLeaderboard.users.find(x => x.userId === user.id);
+  
+      if (lbUser === undefined) {
+        const upsertUser = Constants.config.user;
+        upsertUser.userId = user.id;
+        await msg.client.db.leaderboardRepo.upsertLeaderboard(msg.guild.id, dbLeaderboard.name, { $push: { 'users': upsertUser }});
       }
 
-      await RankService.handle(dbUser, msg.dbGuild, user);
+      leaderboards = await msg.client.db.leaderboardRepo.findMany({ guildId: msg.guild.id });
+
+      dbLeaderboard = leaderboards.find(x => x.lobbies.includes(args.channel.id));
+
+      lbUser = dbLeaderboard.users.find(x => x.userId === user.id);
+  
+      const maxRank = RankService.getGuildRank(lbUser, msg.dbGuild);
+
+      if (args.result.toLowerCase() === Constants.config.result.team1 && selectedGame.team1.includes(user.id)) {
+        await msg.client.db.leaderboardRepo.upsertLeaderboard(msg.guild.id, dbLeaderboard.name, { $pull: { 'users': lbUser } });
+        lbUser.points = lbUser.points + maxRank.winsModifier;
+        lbUser.wins = lbUser.wins + 1;
+        
+        await msg.client.db.leaderboardRepo.upsertLeaderboard(msg.guild.id, dbLeaderboard.name, { $push: { 'users': lbUser} });
+        winEmbed.addField(dbUser.username + ' (+' + maxRank.winsModifier + ')', 'Points: ' + lbUser.points + '\nWins: ' + lbUser.wins);
+      } else if (args.result.toLowerCase() === Constants.config.result.team2 && selectedGame.team2.includes(user.id)) {
+        await msg.client.db.leaderboardRepo.upsertLeaderboard(msg.guild.id, dbLeaderboard.name, { $pull: { 'users': lbUser } });
+        lbUser.points = lbUser.points + maxRank.winsModifier;
+        lbUser.wins = lbUser.wins + 1;
+
+        await msg.client.db.leaderboardRepo.upsertLeaderboard(msg.guild.id, dbLeaderboard.name, { $push: { 'users': lbUser} });
+        winEmbed.addField(dbUser.username + ' (+' + maxRank.winsModifier + ')', 'Points: ' + lbUser.points + '\nWins: ' + lbUser.wins);
+      } else {
+        await msg.client.db.leaderboardRepo.upsertLeaderboard(msg.guild.id, dbLeaderboard.name, { $pull: { 'users': lbUser } });
+        lbUser.points = lbUser.points - maxRank.lossModifier;
+        lbUser.losses = lbUser.losses + 1;
+        lbUser.gamesPlayed = lbUser.gamesPlayed + 1;
+
+        if (lbUser.points < 0) {
+          lbUser.points = 0;
+        }
+
+        await msg.client.db.leaderboardRepo.upsertLeaderboard(msg.guild.id, dbLeaderboard.name, { $push: { 'users': lbUser} });
+        loseEmbed.addField(dbUser.username + ' (-' + maxRank.lossModifier + ')', 'Points: ' + lbUser.points + '\nLosses: ' + lbUser.losses);
+      }
+
+      await RankService.handle(dbUser, lbUser, msg.dbGuild, user);
     }
 
     const updateGame = {

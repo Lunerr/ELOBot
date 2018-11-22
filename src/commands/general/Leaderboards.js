@@ -3,36 +3,29 @@ const patron = require('patron.js');
 class Leaderboards extends patron.Command {
   constructor() {
     super({
-      names: ['leaderboards', 'lb', 'highscores', 'highscore', 'leaderboard'],
+      names: ['leaderboards', 'lbs'],
       groupName: 'general',
-      description: 'View the richest Drug Traffickers.'
+      description: 'View the guild\'s leaderboards.'
     });
   }
 
   async run(msg) {
-    const users = await msg.client.db.userRepo.findMany({ guildId: msg.guild.id });
-
-    users.sort((a, b) => b.score.points - a.score.points);
-
+    const leaderboards = await msg.client.db.leaderboardRepo.findMany({ guildId: msg.guild.id });
     let message = '';
 
-    for (let i = 0; i < users.length; i++) {
+    for (let i = 0; i < leaderboards.length; i++) {
       if (i + 1 > 20) {
         break;
       }
 
-      if (users[i].registered === false) {
-        continue;
-      }
-
-      message += i + 1 + '. ' + users[i].username.boldify() + ': ' + users[i].score.points + '\n';
+      message += leaderboards[i].name + ', ';
     }
 
     if (String.isNullOrWhiteSpace(message)) {
-      return msg.createErrorReply('there is nobody on the leaderboards.');
+      return msg.createErrorReply('there is no leaderboards set.');
     }
 
-    return msg.channel.createMessage(message, { title: 'The Highest Points' });
+    return msg.channel.createMessage(message, { title: msg.guild.name + '\'s leaderboards' });
   }
 }
 

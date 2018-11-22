@@ -34,7 +34,7 @@ class Queue extends patron.Command {
       let team2 = '';
       let playerPool = '';
 
-      for (let i = 0; i < 10; i++) {
+      for (let i = 0; i < msg.dbLobby.userLimit; i++) {
         team1 += currentGame.team1.players[i] !== undefined ? currentGame.team1.players[i].mention() + ', ' : '';
         team2 += currentGame.team2.players[i] !== undefined ? currentGame.team2.players[i].mention() + ', ' : '';
       }

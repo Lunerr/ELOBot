@@ -37,7 +37,6 @@ class Register extends patron.Command {
       const update = {
         $set: {
           username: username,
-          ['score.points']: msg.dbGuild.registration.registrationBonus,
           registered: true
         }
       };
@@ -47,7 +46,7 @@ class Register extends patron.Command {
     }
 
     if (msg.member.roles.highest.position < msg.member.guild.me.roles.highest.position && msg.member.id !== msg.member.guild.ownerID) {
-      msg.member.setNickname(msg.dbGuild.registration.nameFormat.format(msg.dbUser.score.points, username));
+      msg.member.setNickname(username);
     }
 
     return;

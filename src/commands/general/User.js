@@ -12,6 +12,12 @@ class User extends patron.Command {
       description: 'Get information about the specified user profile.',
       args: [
         new patron.Argument({
+          name: 'leaderboard',
+          key: 'leaderboard',
+          type: 'string',
+          example: '5v5-pugs'
+        }),
+        new patron.Argument({
           name: 'member',
           key: 'member',
           type: 'member',
@@ -24,34 +30,43 @@ class User extends patron.Command {
   }
 
   async run(msg, args) {
+    const leaderboard = await msg.client.db.leaderboardRepo.findOne({ guildId: msg.guild.id, name: args.leaderboard });
+
+    if (leaderboard === null) {
+      return msg.createErrorReply('this leaderboard does not exist.');
+    }
+
+    const dbLeaderboard = await msg.client.db.leaderboardRepo.getLeaderboard(msg.guild.id, args.leaderboard);
     const dbUser = msg.author.id === args.member.id ? msg.dbUser : await msg.client.db.userRepo.getUser(args.member.id, msg.guild.id);
-    
-    if (dbUser.registered === false)
-    {
+    const lbUser = dbLeaderboard.users.find(x => x.userId === args.member.id);
+
+    if (dbUser.registered === false) {
       return msg.createErrorReply('user is not registered.');
+    } else if (lbUser === undefined) {
+      return msg.createErrorReply('user is not on this leaderboard.');
     }
 
     const embed = new MessageEmbed()
       .setColor(Random.arrayElement(Constants.data.colors.defaults))
       .setTitle(dbUser.username + ' Profile')
-      .addField("Points", dbUser.score.points, true)
-      .addField("Rank", RankService.getRank(dbUser, msg.dbGuild, msg.guild), true)
+      .addField("Points", lbUser.points, true)
+      .addField("Rank", RankService.getRank(lbUser, msg.dbGuild, msg.guild), true)
       .addField("Games", "**Games Played**\n" +
-        dbUser.score.gamesPlayed + '\n' +
+        lbUser.gamesPlayed + '\n' +
         "**Wins**\n" +
-        dbUser.score.wins + '\n' +
+        lbUser.wins + '\n' +
         "**Losses**\n" +
-        dbUser.score.losses + '\n' +
+        lbUser.losses + '\n' +
         "**WLR**\n" +
-        (dbUser.score.wins / dbUser.score.losses), true);
+        (lbUser.wins / lbUser.losses), true);
 
     if (msg.dbGuild.settings.useKD) {
       embed.addField("K/D", "**Kills**\n" +
-        dbUser.score.kills + '\n' +
+        lbUser.kills + '\n' +
         "**Deaths**\n" +
-        dbUser.score.deaths + '\n' +
+        lbUser.deaths + '\n' +
         "**KDR**\n" +
-        (dbUser.score.kills / dbUser.score.deaths), true);
+        (lbUser.kills / dbUser.deaths), true);
     }
 
     return msg.channel.send({ embed });

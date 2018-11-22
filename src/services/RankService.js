@@ -1,7 +1,7 @@
 const NumberUtil = require('../utility/NumberUtil.js');
 
 class RankService {
-  async handle(dbUser, dbGuild, member) {
+  async handle(dbUser, lbUser, dbGuild, member) {
     await member.guild.members.fetch(member.client.user);
 
     if (!member.guild.me.hasPermission('MANAGE_ROLES')) {
@@ -13,7 +13,7 @@ class RankService {
     const highsetRolePosition = member.guild.me.roles.highest.position;
     const rolesToAdd = [];
     const rolesToRemove = [];
-    const points = dbUser.score.points;
+    const points = lbUser.points;
 
     for (const rank of dbGuild.roles.rank) {
       const role = member.guild.roles.get(rank.id);
@@ -30,7 +30,7 @@ class RankService {
     }
 
     if (member.roles.highest.position < member.guild.me.roles.highest.position && member.id !== member.guild.ownerID) {
-      member.setNickname(dbGuild.registration.nameFormat.format(dbUser.score.points, dbUser.username));
+      member.setNickname(dbUser.username);
     }
 
     if (rolesToAdd.length > 0) {
@@ -40,9 +40,9 @@ class RankService {
     }
   }
 
-  getRank(dbUser, dbGuild, guild) {
+  getRank(lbUser, dbGuild, guild) {
     let role;
-    const points = dbUser.score.points;
+    const points = lbUser.points;
 
     for (const rank of dbGuild.roles.rank.sort((a, b) => a.threshold - b.threshold)) {
       if (points >= rank.threshold) {
@@ -57,9 +57,9 @@ class RankService {
     return role;
   }
 
-  getGuildRank(dbUser, dbGuild) {
+  getGuildRank(lbUser, dbGuild) {
     let role;
-    const points = dbUser.score.points;
+    const points = lbUser.points;
 
     for (const rank of dbGuild.roles.rank.sort((a, b) => a.threshold - b.threshold)) {
       if (points >= rank.threshold) {
@@ -71,10 +71,8 @@ class RankService {
       return 'unranked';
     }
 
-    console.log(role);
-
     return role;
   }
 }
 
-module.exports = new RankService();
+module.exports = new RankService()
