@@ -19,7 +19,7 @@ class SetLobby extends patron.Command {
   }
 
   async run(msg, args) {
-    await msg.client.db.lobbyRepo.upsertLobby(msg.channel.id, { $set: { 'isALobby': true } });
+    await msg.client.db.lobbyRepo.upsertLobby(args.channel.id, { $set: { 'isALobby': true } });
 
     return msg.createReply('you have successfully set ' + args.channel.toString() + ' as a lobby.');
   }
