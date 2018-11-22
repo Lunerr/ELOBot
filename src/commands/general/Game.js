@@ -107,6 +107,7 @@ class Game extends patron.Command {
         await msg.client.db.leaderboardRepo.upsertLeaderboard(msg.guild.id, dbLeaderboard.name, { $pull: { 'users': lbUser } });
         lbUser.points = lbUser.points + maxRank.winsModifier;
         lbUser.wins = lbUser.wins + 1;
+        lbUser.gamesPlayed = lbUser.gamesPlayed + 1;
         
         await msg.client.db.leaderboardRepo.upsertLeaderboard(msg.guild.id, dbLeaderboard.name, { $push: { 'users': lbUser} });
         winEmbed.addField(dbUser.username + ' (+' + maxRank.winsModifier + ')', 'Points: ' + lbUser.points + '\nWins: ' + lbUser.wins);
@@ -114,6 +115,7 @@ class Game extends patron.Command {
         await msg.client.db.leaderboardRepo.upsertLeaderboard(msg.guild.id, dbLeaderboard.name, { $pull: { 'users': lbUser } });
         lbUser.points = lbUser.points + maxRank.winsModifier;
         lbUser.wins = lbUser.wins + 1;
+        lbUser.gamesPlayed = lbUser.gamesPlayed + 1;
 
         await msg.client.db.leaderboardRepo.upsertLeaderboard(msg.guild.id, dbLeaderboard.name, { $push: { 'users': lbUser} });
         winEmbed.addField(dbUser.username + ' (+' + maxRank.winsModifier + ')', 'Points: ' + lbUser.points + '\nWins: ' + lbUser.wins);
