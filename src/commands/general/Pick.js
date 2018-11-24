@@ -144,8 +144,7 @@ class Pick extends patron.Command {
 
       const updateNew = {
         $set: {
-          'currentGame': Constants.config.currentGame,
-          'mapInfo.lastMap': map
+          'currentGame': Constants.config.currentGame
         }
       };
 
