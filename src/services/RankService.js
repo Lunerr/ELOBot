@@ -42,15 +42,15 @@ class RankService {
             upsertUser.userId = user.id;
             await client.db.leaderboardRepo.upsertLeaderboard(member.guild.id, dbUser.displayedLb, { $push: { 'users': upsertUser }});
 
-            member.setNickname(dbGuild.registration.nameFormat.format(upsertUser.points, username));
+            member.setNickname(dbGuild.registration.nameFormat.format(upsertUser.points, dbUser.username));
           } else {
-            member.setNickname(dbGuild.registration.nameFormat.format(lbUser.points, username));
+            member.setNickname(dbGuild.registration.nameFormat.format(lbUser.points, dbUser.username));
           }
         } else {
-          member.setNickname(username);
+          member.setNickname(dbUser.username);
         }
       } else {
-        member.setNickname(username);
+        member.setNickname(dbUser.username);
       }
     }
 
