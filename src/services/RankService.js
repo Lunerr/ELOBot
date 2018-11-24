@@ -40,17 +40,17 @@ class RankService {
           if (lbUser === undefined) {
             const upsertUser = Constants.config.user;
             upsertUser.userId = user.id;
-            await client.db.leaderboardRepo.upsertLeaderboard(msg.guild.id, dbUser.displayedLb, { $push: { 'users': upsertUser }});
+            await client.db.leaderboardRepo.upsertLeaderboard(member.guild.id, dbUser.displayedLb, { $push: { 'users': upsertUser }});
 
-            msg.member.setNickname(msg.dbGuild.registration.nameFormat.format(upsertUser.points, username));
+            member.setNickname(dbGuild.registration.nameFormat.format(upsertUser.points, username));
           } else {
-            msg.member.setNickname(msg.dbGuild.registration.nameFormat.format(lbUser.points, username));
+            member.setNickname(dbGuild.registration.nameFormat.format(lbUser.points, username));
           }
         } else {
-          msg.member.setNickname(username);
+          member.setNickname(username);
         }
       } else {
-        msg.member.setNickname(username);
+        member.setNickname(username);
       }
     }
 
