@@ -40,7 +40,7 @@ class SetDisplayLeaderboard extends patron.Command {
         upsertUser.userId = msg.author.id;
         await msg.client.db.leaderboardRepo.upsertLeaderboard(msg.guild.id, dbLeaderboard.name, { $push: { 'users': upsertUser }});
   
-        leaderboards = await msg.client.db.leaderboardRepo.findMany({ guildId: msg.guild.id });
+        const leaderboards = await msg.client.db.leaderboardRepo.findMany({ guildId: msg.guild.id });
   
         dbLeaderboard = leaderboards.find(x => x.lobbies.includes(args.channel.id));
   
