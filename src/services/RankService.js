@@ -31,10 +31,10 @@ class RankService {
 
     if (member.roles.highest.position < member.guild.me.roles.highest.position && member.id !== member.guild.ownerID) {
       if (dbUser.displayedLb !== null) {
-        const leaderboard = await client.db.leaderboardRepo.findOne({ guildId: msg.guild.id, name: dbUser.displayedLb });
+        const leaderboard = await client.db.leaderboardRepo.findOne({ guildId: member.guild.id, name: dbUser.displayedLb });
 
         if (leaderboard !== null) {
-          const dbLeaderboard = await client.db.leaderboardRepo.getLeaderboard(msg.guild.id, dbUser.displayedLb);
+          const dbLeaderboard = await client.db.leaderboardRepo.getLeaderboard(member.guild.id, dbUser.displayedLb);
           const lbUser = dbLeaderboard.users.find(x => x.userId === member.id);
 
           if (lbUser === undefined) {
