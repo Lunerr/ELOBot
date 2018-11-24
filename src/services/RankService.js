@@ -13,21 +13,7 @@ class RankService {
     const highsetRolePosition = member.guild.me.roles.highest.position;
     const rolesToAdd = [];
     const rolesToRemove = [];
-    const points = lbUser.points;
-
-    for (const rank of dbGuild.roles.rank) {
-      const role = member.guild.roles.get(rank.id);
-
-      if (role && role.position < highsetRolePosition) {
-        if (!member.roles.has(role.id)) {
-          if (points >= rank.threshold) {
-            rolesToAdd.push(role);
-          }
-        } else if (points < rank.threshold) {
-          rolesToRemove.push(role);
-        }
-      }
-    }
+    let points = lbUser.points;
 
     if (member.roles.highest.position < member.guild.me.roles.highest.position && member.id !== member.guild.ownerID) {
       if (dbUser.displayedLb !== null) {
@@ -35,16 +21,39 @@ class RankService {
 
         if (leaderboard !== null) {
           const dbLeaderboard = await client.db.leaderboardRepo.getLeaderboard(member.guild.id, dbUser.displayedLb);
-          const lbUser = dbLeaderboard.users.find(x => x.userId === member.id);
+          const lbUserNickname = dbLeaderboard.users.find(x => x.userId === member.id);
 
-          if (lbUser === undefined) {
+          if (lbUserNickname === undefined) {
             const upsertUser = Constants.config.user;
             upsertUser.userId = user.id;
             await client.db.leaderboardRepo.upsertLeaderboard(member.guild.id, dbUser.displayedLb, { $push: { 'users': upsertUser }});
 
+            points = upsertUser.points
             member.setNickname(dbGuild.registration.nameFormat.format(upsertUser.points, dbUser.username));
           } else {
-            member.setNickname(dbGuild.registration.nameFormat.format(lbUser.points, dbUser.username));
+            points = lbUserNickname.points
+
+            member.setNickname(dbGuild.registration.nameFormat.format(lbUserNickname.points, dbUser.username));
+          }
+
+          for (const rank of dbGuild.roles.rank) {
+            const role = member.guild.roles.get(rank.id);
+
+            if (role && role.position < highsetRolePosition) {
+              if (!member.roles.has(role.id)) {
+                if (points >= rank.threshold) {
+                  rolesToAdd.push(role);
+                }
+              } else if (points < rank.threshold) {
+                rolesToRemove.push(role);
+              }
+            }
+          }
+
+          if (rolesToAdd.length > 0) {
+            member.roles.add(rolesToAdd);
+          } else if (rolesToRemove.length > 0) {
+            member.roles.remove(rolesToRemove);
           }
         } else {
           member.setNickname(dbUser.username);
@@ -52,12 +61,8 @@ class RankService {
       } else {
         member.setNickname(dbUser.username);
       }
-    }
 
-    if (rolesToAdd.length > 0) {
-      return member.roles.add(rolesToAdd);
-    } else if (rolesToRemove.length > 0) {
-      return member.roles.remove(rolesToRemove);
+      return;
     }
   }
 
