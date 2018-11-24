@@ -1,4 +1,5 @@
 const patron = require('patron.js');
+const Constants = require('../../utility/Constants.js');
 
 class SetDisplayLeaderboard extends patron.Command {
   constructor() {

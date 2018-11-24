@@ -1,5 +1,3 @@
-const NumberUtil = require('../utility/NumberUtil.js');
-
 class RankService {
   async handle(dbUser, lbUser, dbGuild, client, member) {
     await member.guild.members.fetch(member.client.user);
