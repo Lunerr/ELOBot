@@ -133,7 +133,7 @@ class Game extends patron.Command {
         loseEmbed.addField(dbUser.username + ' (-' + maxRank.lossModifier + ')', 'Points: ' + lbUser.points + '\nLosses: ' + lbUser.losses);
       }
 
-      await RankService.handle(dbUser, lbUser, msg.dbGuild, msg);
+      await RankService.handle(dbUser, lbUser, msg.dbGuild, msg.client, user);
     }
 
     const updateGame = {
