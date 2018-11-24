@@ -1,25 +1,25 @@
 const NumberUtil = require('../utility/NumberUtil.js');
 
 class RankService {
-  async handle(dbUser, lbUser, dbGuild, member) {
-    await member.guild.members.fetch(member.client.user);
+  async handle(dbUser, lbUser, dbGuild, msg) {
+    await msg.member.guild.msg.members.fetch(msg.member.client.user);
 
-    if (!member.guild.me.hasPermission('MANAGE_ROLES')) {
+    if (!msg.member.guild.me.hasPermission('MANAGE_ROLES')) {
       return;
     } else if (dbUser.registered === false) {
       return;
     }
 
-    const highsetRolePosition = member.guild.me.roles.highest.position;
+    const highsetRolePosition = msg.member.guild.me.roles.highest.position;
     const rolesToAdd = [];
     const rolesToRemove = [];
     const points = lbUser.points;
 
     for (const rank of dbGuild.roles.rank) {
-      const role = member.guild.roles.get(rank.id);
+      const role = msg.member.guild.roles.get(rank.id);
 
       if (role && role.position < highsetRolePosition) {
-        if (!member.roles.has(role.id)) {
+        if (!msg.member.roles.has(role.id)) {
           if (points >= rank.threshold) {
             rolesToAdd.push(role);
           }
@@ -35,29 +35,29 @@ class RankService {
 
         if (leaderboard !== null) {
           const dbLeaderboard = await msg.client.db.leaderboardRepo.getLeaderboard(msg.guild.id, dbUser.displayedLb);
-          const lbUser = dbLeaderboard.users.find(x => x.userId === member.id);
+          const lbUser = dbLeaderboard.users.find(x => x.userId === msg.member.id);
 
           if (lbUser === undefined) {
             const upsertUser = Constants.config.user;
             upsertUser.userId = user.id;
             await msg.client.db.leaderboardRepo.upsertLeaderboard(msg.guild.id, dbUser.displayedLb, { $push: { 'users': upsertUser }});
 
-            msg.member.setNickname(msg.dbGuild.registration.nameFormat.format(upsertUser.points, username));
+            msg.msg.member.setNickname(msg.dbGuild.registration.nameFormat.format(upsertUser.points, username));
           } else {
-            msg.member.setNickname(msg.dbGuild.registration.nameFormat.format(lbUser.points, username));
+            msg.msg.member.setNickname(msg.dbGuild.registration.nameFormat.format(lbUser.points, username));
           }
         } else {
-          msg.member.setNickname(username);
+          msg.msg.member.setNickname(username);
         }
       } else {
-        msg.member.setNickname(username);
+        msg.msg.member.setNickname(username);
       }
     }
 
     if (rolesToAdd.length > 0) {
-      return member.roles.add(rolesToAdd);
+      return msg.member.roles.add(rolesToAdd);
     } else if (rolesToRemove.length > 0) {
-      return member.roles.remove(rolesToRemove);
+      return msg.member.roles.remove(rolesToRemove);
     }
   }
 
