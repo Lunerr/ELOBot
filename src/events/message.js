@@ -30,7 +30,7 @@ client.on('message', async msg => {
     }
 
     if (msg.lbUser !== undefined) {
-      RankService.handle(msg.dbUser, msg.lbUser, msg.dbGuild, client, msg);
+      RankService.handle(msg.dbUser, msg.lbUser, msg.dbGuild, client, msg.member);
     }
   }
 
