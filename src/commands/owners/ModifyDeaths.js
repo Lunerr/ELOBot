@@ -32,6 +32,12 @@ class ModifyDeaths extends patron.Command {
   }
 
   async run(msg, args) {
+    const leaderboard = await msg.client.db.leaderboardRepo.findOne({ guildId: msg.guild.id, name: args.leaderboard });
+
+    if (leaderboard === null) {
+      return msg.createErrorReply('this leaderboard doesn\'t exist.');
+    }
+
     const dbLeaderboard = await msg.client.db.leaderboardRepo.getLeaderboard(msg.guild.id, args.leaderboard);
     const lbUser = dbLeaderboard.users.find(x => x.userId === args.member.id);
 
