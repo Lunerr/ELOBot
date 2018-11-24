@@ -22,7 +22,7 @@ class DelMap extends patron.Command {
 
     await msg.client.db.lobbyRepo.upsertLobby(msg.channel.id, update);
 
-    return msg.createReply('you have successfully removed the map ' + args.map.bolidfy() + ' from this lobby.');
+    return msg.createReply('you have successfully removed the map ' + args.map.boldify() + ' from this lobby.');
   }
 }
 
