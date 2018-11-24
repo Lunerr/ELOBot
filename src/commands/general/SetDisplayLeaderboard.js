@@ -37,17 +37,17 @@ class SetDisplayLeaderboard extends patron.Command {
       
       if (lbUser === undefined) {
         const upsertUser = Constants.config.user;
-        upsertUser.userId = user.id;
+        upsertUser.userId = msg.author.id;
         await msg.client.db.leaderboardRepo.upsertLeaderboard(msg.guild.id, dbLeaderboard.name, { $push: { 'users': upsertUser }});
   
         leaderboards = await msg.client.db.leaderboardRepo.findMany({ guildId: msg.guild.id });
   
         dbLeaderboard = leaderboards.find(x => x.lobbies.includes(args.channel.id));
   
-        lbUser = dbLeaderboard.users.find(x => x.userId === user.id);
+        lbUser = dbLeaderboard.users.find(x => x.userId === msg.author.id);
       }
       
-      msg.member.setNickname(msg.dbGuild.registration.nameFormat.format(lbUser.points, username));
+      msg.member.setNickname(msg.dbGuild.registration.nameFormat.format(lbUser.points, msg.dbUser.username));
     }
 
     return msg.createReply('you\'ve successfully set leaderboard ' + args.leaderboard + ' to display on your nickname.');
