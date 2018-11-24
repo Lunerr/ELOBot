@@ -29,8 +29,29 @@ class RankService {
       }
     }
 
-    if (member.roles.highest.position < member.guild.me.roles.highest.position && member.id !== member.guild.ownerID) {
-      member.setNickname(dbUser.username);
+    if (msg.member.roles.highest.position < msg.member.guild.me.roles.highest.position && msg.member.id !== msg.member.guild.ownerID) {
+      if (dbUser.displayedLb !== null) {
+        const leaderboard = await msg.client.db.leaderboardRepo.findOne({ guildId: msg.guild.id, name: dbUser.displayedLb });
+
+        if (leaderboard !== null) {
+          const dbLeaderboard = await msg.client.db.leaderboardRepo.getLeaderboard(msg.guild.id, dbUser.displayedLb);
+          const lbUser = dbLeaderboard.users.find(x => x.userId === member.id);
+
+          if (lbUser === undefined) {
+            const upsertUser = Constants.config.user;
+            upsertUser.userId = user.id;
+            await msg.client.db.leaderboardRepo.upsertLeaderboard(msg.guild.id, dbUser.displayedLb, { $push: { 'users': upsertUser }});
+
+            msg.member.setNickname(msg.dbGuild.registration.nameFormat.format(upsertUser.points, username));
+          } else {
+            msg.member.setNickname(msg.dbGuild.registration.nameFormat.format(lbUser.points, username));
+          }
+        } else {
+          msg.member.setNickname(username);
+        }
+      } else {
+        msg.member.setNickname(username);
+      }
     }
 
     if (rolesToAdd.length > 0) {

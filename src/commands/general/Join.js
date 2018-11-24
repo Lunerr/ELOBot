@@ -107,7 +107,7 @@ class Join extends patron.Command {
           };
     
           await msg.client.db.lobbyRepo.upsertLobby(msg.channel.id, updateNew);
-    
+
           const embed = new MessageEmbed()
           .setColor(Random.arrayElement(Constants.data.colors.defaults))
           .addField('Game Info', 'Lobby: <#' + msg.channel + '>\nGame: ' + msg.dbLobby.gamesPlayed)
@@ -129,9 +129,9 @@ class Join extends patron.Command {
             const upsertUser = Constants.config.user;
             upsertUser.userId = currentGame.queuedPlayerIDs[i];
             await msg.client.db.leaderboardRepo.upsertLeaderboard(msg.guild.id, msg.dbLeaderboard.name, { $push: { 'users': upsertUser }});
-            player = msg.dbLeaderboard.users.find(x => x.userId === currentGame.queuedPlayerIDs[i]);
           }
 
+          player = msg.dbLeaderboard.users.find(x => x.userId === currentGame.queuedPlayerIDs[i]);
           players.push(player);
         }
     
@@ -170,7 +170,6 @@ class Join extends patron.Command {
           playerPool += gameLobby.currentGame.queuedPlayerIDs[i].mention() + ' | ';
         }
 
-        // send message
         return msg.channel.createMessage('**Team 1 Captain:** ' + captain1.userId.mention() + '\n' +
                                           '**Team 2 Captain:** ' + captain2.userId.mention() + '\n\n' +
                                           '**Select Your Teams using `' + Constants.data.misc.prefix + 'pick <@user>`**\n' +

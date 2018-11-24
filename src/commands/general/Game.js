@@ -108,7 +108,7 @@ class Game extends patron.Command {
         lbUser.points = lbUser.points + maxRank.winsModifier;
         lbUser.wins = lbUser.wins + 1;
         lbUser.gamesPlayed = lbUser.gamesPlayed + 1;
-        
+
         await msg.client.db.leaderboardRepo.upsertLeaderboard(msg.guild.id, dbLeaderboard.name, { $push: { 'users': lbUser} });
         winEmbed.addField(dbUser.username + ' (+' + maxRank.winsModifier + ')', 'Points: ' + lbUser.points + '\nWins: ' + lbUser.wins);
       } else if (args.result.toLowerCase() === Constants.config.result.team2 && selectedGame.team2.includes(user.id)) {

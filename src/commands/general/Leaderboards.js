@@ -25,7 +25,7 @@ class Leaderboards extends patron.Command {
       return msg.createErrorReply('there is no leaderboards set.');
     }
 
-    return msg.channel.createMessage(message, { title: msg.guild.name + '\'s leaderboards' });
+    return msg.channel.createMessage(message.substring(0, message.length - 2), { title: msg.guild.name + '\'s leaderboards' });
   }
 }
 

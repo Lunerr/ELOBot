@@ -3,7 +3,7 @@ const patron = require('patron.js');
 class AddLeaderboard extends patron.Command {
   constructor() {
     super({
-      names: ['addleaderboard', 'setleaderboard'],
+      names: ['addleaderboard', 'setleaderboard', 'addlb', 'setlb'],
       groupName: 'administration',
       description: 'Add a leaderboard.',
       args: [

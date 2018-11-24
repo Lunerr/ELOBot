@@ -5,6 +5,7 @@ class User {
     
     this.username = null;
     this.registered = false;
+    this.displayedLb = null;
 
     this.ban = {
       banned: false,

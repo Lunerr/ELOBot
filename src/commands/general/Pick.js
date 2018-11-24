@@ -142,6 +142,15 @@ class Pick extends patron.Command {
 
       await msg.client.db.lobbyRepo.upsertLobby(msg.channel.id, { $inc: { 'gamesPlayed': 1 }});
 
+      const updateNew = {
+        $set: {
+          'currentGame': Constants.config.currentGame,
+          'mapInfo.lastMap': map
+        }
+      };
+
+      await msg.client.db.lobbyRepo.upsertLobby(msg.channel.id, updateNew);
+
       const map = Random.arrayElement(msg.dbLobby.maps);
 
       for (let i = 0; i < fullTeam.length; i++){
@@ -156,17 +165,12 @@ class Pick extends patron.Command {
         .addField('Map', map)
         .addField('Selected Host', host.mention());
 
-        await user.send({ embed: dmEmbed });
-      }
-
-      const updateNew = {
-        $set: {
-          'currentGame': Constants.config.currentGame,
-          'mapInfo.lastMap': map
+        try {
+          await user.send({ embed: dmEmbed });
+        } catch (err) {
+          console.log(err);
         }
-      };
-
-      await msg.client.db.lobbyRepo.upsertLobby(msg.channel.id, updateNew);
+      }
 
       const embed = new MessageEmbed()
       .setColor(Random.arrayElement(Constants.data.colors.defaults))

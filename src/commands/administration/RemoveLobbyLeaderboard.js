@@ -3,7 +3,7 @@ const patron = require('patron.js');
 class RemoveLobbyLeaderboard extends patron.Command {
   constructor() {
     super({
-      names: ['removelobbyleaderboard', 'removeleaderboardlobby'],
+      names: ['removelobbyleaderboard', 'removeleaderboardlobby', 'removelobbylb', 'removelblobby'],
       groupName: 'administration',
       description: 'Removes a lobby\'s leaderboard.',
       args: [
