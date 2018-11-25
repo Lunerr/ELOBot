@@ -132,7 +132,7 @@ class Game extends patron.Command {
   
         await RankService.handle(dbUser, lbUser, msg.dbGuild, msg.client, user);
       } else {
-        loseEmbed.addField(userList[i].mention() + ' is not in the guild anymore.');
+        loseEmbed.addField('User ID: ' + userList[i], 'Is not in the guild anymore.');
       }
     }
 
