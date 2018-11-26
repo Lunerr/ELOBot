@@ -1,5 +1,5 @@
 class RankService {
-  async handle(dbUser, lbUser, dbGuild, client, member) {
+  async handle(dbUser, dbGuild, client, member) {
     await member.guild.members.fetch(member.client.user);
 
     if (!member.guild.me.hasPermission('MANAGE_ROLES')) {
@@ -15,7 +15,6 @@ class RankService {
     const highsetRolePosition = member.guild.me.roles.highest.position;
     const rolesToAdd = [];
     const rolesToRemove = [];
-    let points = lbUser.points;
 
     console.log(dbUser);
 

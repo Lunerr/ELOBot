@@ -29,7 +29,7 @@ client.on('message', async msg => {
       msg.lbUser = msg.dbLeaderboard.users.find(x => x.userId === msg.author.id);
     }
 
-    RankService.handle(msg.dbUser, msg.lbUser, msg.dbGuild, client, msg.member);
+    RankService.handle(msg.dbUser, msg.dbGuild, client, msg.member);
   }
 
   if (!Constants.data.regexes.prefix.test(msg.content)) {
