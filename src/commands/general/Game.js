@@ -130,7 +130,7 @@ class Game extends patron.Command {
           loseEmbed.addField(dbUser.username + ' (-' + maxRank.lossModifier + ')', 'Points: ' + lbUser.points + '\nLosses: ' + lbUser.losses);
         }
   
-        await RankService.handle(dbUser, lbUser, msg.dbGuild, msg.client, user);
+        await RankService.handle(dbUser, msg.dbGuild, msg.client, user);
       } else {
         loseEmbed.addField('User ID: ' + userList[i], 'Is not in the guild anymore.');
       }
