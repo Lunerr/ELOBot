@@ -3,10 +3,14 @@ class RankService {
     await member.guild.members.fetch(member.client.user);
 
     if (!member.guild.me.hasPermission('MANAGE_ROLES')) {
+      console.log('doesnt have perms');
       return;
     } else if (dbUser.registered === false) {
+      console.log('not registered');
       return;
     }
+
+    console.log('passed all checks');
 
     const highsetRolePosition = member.guild.me.roles.highest.position;
     const rolesToAdd = [];
