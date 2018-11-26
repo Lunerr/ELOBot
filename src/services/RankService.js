@@ -15,6 +15,7 @@ class RankService {
     const highsetRolePosition = member.guild.me.roles.highest.position;
     const rolesToAdd = [];
     const rolesToRemove = [];
+    let points = 0;
 
     console.log(dbUser);
 
