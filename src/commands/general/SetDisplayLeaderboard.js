@@ -32,8 +32,8 @@ class SetDisplayLeaderboard extends patron.Command {
     await msg.client.db.userRepo.updateUser(msg.author.id, msg.guild.id, { $set: { displayedLb: args.leaderboard } });
 
     if (msg.member.roles.highest.position < msg.member.guild.me.roles.highest.position && msg.member.id !== msg.member.guild.ownerID) {
-      const dbLeaderboard = await msg.client.db.leaderboardRepo.getLeaderboard(msg.guild.id, args.leaderboard);
-      const lbUser = dbLeaderboard.users.find(x => x.userId === msg.author.id);
+      let dbLeaderboard = await msg.client.db.leaderboardRepo.getLeaderboard(msg.guild.id, args.leaderboard);
+      let lbUser = dbLeaderboard.users.find(x => x.userId === msg.author.id);
       
       if (lbUser === undefined) {
         const upsertUser = Constants.config.user;
