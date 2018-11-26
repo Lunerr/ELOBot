@@ -13,11 +13,15 @@ class RankService {
     const rolesToRemove = [];
     let points = lbUser.points;
 
+    console.log(dbUser);
+
     if (member.roles.highest.position < member.guild.me.roles.highest.position && member.id !== member.guild.ownerID) {
       if (dbUser.displayedLb !== null) {
         const leaderboard = await client.db.leaderboardRepo.findOne({ guildId: member.guild.id, name: dbUser.displayedLb });
 
         if (leaderboard !== null) {
+          console.log('doing nickname');
+
           const dbLeaderboard = await client.db.leaderboardRepo.getLeaderboard(member.guild.id, dbUser.displayedLb);
           const lbUserNickname = dbLeaderboard.users.find(x => x.userId === member.id);
 
@@ -34,23 +38,29 @@ class RankService {
             member.setNickname(dbGuild.registration.nameFormat.format(lbUserNickname.points, dbUser.username));
           }
 
+          console.log('did nickname, doing ranks');
+
           for (const rank of dbGuild.roles.rank) {
             const role = member.guild.roles.get(rank.id);
 
             if (role && role.position < highsetRolePosition) {
               if (!member.roles.has(role.id)) {
                 if (points >= rank.threshold) {
+                  console.log('role to add');
                   rolesToAdd.push(role);
                 }
               } else if (points < rank.threshold) {
+                console.log('role to remove');
                 rolesToRemove.push(role);
               }
             }
           }
 
           if (rolesToAdd.length > 0) {
+            console.log('adding roles');
             member.roles.add(rolesToAdd);
           } else if (rolesToRemove.length > 0) {
+            console.log('removing roles');
             member.roles.remove(rolesToRemove);
           }
         } else {

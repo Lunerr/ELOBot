@@ -41,7 +41,7 @@ class Game extends patron.Command {
     }
 
     if (!msg.member.roles.find(x => x.id === '499981512205139993')) {
-      //return msg.createErrorReply('you are not a score reporter.');
+      return msg.createErrorReply('you are not a score reporter.');
     }
 
     const selectedGame = await msg.client.db.gameResultRepo.getGameResult(args.channel.id, args.gameNumber);

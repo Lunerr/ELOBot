@@ -42,7 +42,7 @@ class SetDisplayLeaderboard extends patron.Command {
   
         const leaderboards = await msg.client.db.leaderboardRepo.findMany({ guildId: msg.guild.id });
   
-        dbLeaderboard = leaderboards.find(x => x.lobbies.includes(args.channel.id));
+        dbLeaderboard = leaderboards.find(x => x.name === args.leaderboard);
   
         lbUser = dbLeaderboard.users.find(x => x.userId === msg.author.id);
       }
