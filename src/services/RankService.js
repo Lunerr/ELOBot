@@ -1,3 +1,4 @@
+const Constants = require('../../utility/Constants.js');
 class RankService {
   async handle(dbUser, dbGuild, client, member) {
     await member.guild.members.fetch(member.client.user);
