@@ -1,3 +1,4 @@
+const Constants = require('../utility/Constants.js');
 class RankService {
   async handle(dbUser, dbGuild, client, member) {
     await member.guild.members.fetch(member.client.user);
@@ -24,7 +25,7 @@ class RankService {
 
           if (lbUserNickname === undefined) {
             const upsertUser = Constants.config.user;
-            upsertUser.userId = user.id;
+            upsertUser.userId = member.id;
             await client.db.leaderboardRepo.upsertLeaderboard(member.guild.id, dbUser.displayedLb, { $push: { 'users': upsertUser }});
 
             points = upsertUser.points
