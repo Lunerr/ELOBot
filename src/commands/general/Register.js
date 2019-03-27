@@ -42,7 +42,7 @@ class Register extends patron.Command {
         }
       };
 
-      await msg.member.roles.addRole(msg.dbGuild.roles.registered);
+      await msg.member.roles.add(msg.dbGuild.roles.registered);
       await msg.client.db.userRepo.updateUser(msg.author.id, msg.guild.id, update);
       await msg.channel.createMessage(msg.dbGuild.registration.message, { title: 'Success, Registered as ' + username});
     }
