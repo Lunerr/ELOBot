@@ -15,25 +15,15 @@ class Join extends patron.Command {
   async run(msg) {
     if (msg.dbLobby.isALobby === false) {
       return msg.createErrorReply('this channel is not a lobby.');
-    }
-
-    if (msg.dbLeaderboard === null) {
+    } else if (msg.dbLeaderboard === null) {
       return msg.createErrorReply('this lobby does not have a leaderboard assigned to it.');
-    }
-
-    if (msg.dbLobby.currentGame.queuedPlayerIDs.includes(msg.author.id)) {
+    } else if (msg.dbLobby.currentGame.queuedPlayerIDs.includes(msg.author.id)) {
       return msg.createErrorReply('You are already queued for this lobby.');
-    }
-
-    if (msg.dbUser.registered === false) {
+    } else if (msg.dbUser.registered === false) {
       return msg.createErrorReply('you have not registered yet.');
-    }
-
-    if (msg.dbUser.ban.banned === true) {
+    } else if (msg.dbUser.ban.banned === true) {
       return msg.createErrorReply('You are banned from matchmaking for another ' + msg.dbUser.ban.expireTime - Date.now() + '.');
-    }
-
-    if (msg.dbLobby.currentGame.isPickingTeams === true) {
+    } else if (msg.dbLobby.currentGame.isPickingTeams === true) {
       return msg.createErrorReply('Currently picking teams. Please wait until this is completed.');
     }
 
@@ -42,7 +32,6 @@ class Join extends patron.Command {
     await msg.client.db.lobbyRepo.upsertLobby(msg.channel.id, update);
 
     const newLobby = await msg.client.db.lobbyRepo.getLobby(msg.channel.id);
-
     const queuedIds = newLobby.currentGame.queuedPlayerIDs;
 
     if (msg.dbLobby.userLimit <= queuedIds.length) {
@@ -52,6 +41,7 @@ class Join extends patron.Command {
           return msg.channel.createMessage('Game aborted, missing player in queue.');
         }
 
+        // 1v1 lobby
         if (msg.dbLobby.userLimit === 2) {
           const newLobby = await msg.client.db.lobbyRepo.getLobby(msg.channel.id);
           const newCurrentGame = newLobby.currentGame;
@@ -79,7 +69,6 @@ class Join extends patron.Command {
           };
     
           await msg.client.db.gameResultRepo.updateGameResult(msg.channel.id, newLobby.gamesPlayed, update);
-    
           await msg.client.db.lobbyRepo.upsertLobby(msg.channel.id, { $inc: { 'gamesPlayed': 1 }});
     
           const map = Random.arrayElement(msg.dbLobby.maps);
@@ -119,6 +108,7 @@ class Join extends patron.Command {
           return msg.channel.send({ embed });
         }
 
+        // other lobbies
         const currentGame = msg.dbLobby.currentGame;
         const players = [];
 
@@ -138,13 +128,9 @@ class Join extends patron.Command {
         players.sort((a, b) => b.points - a.points);
     
         const topHalf = players.slice(0, msg.dbLobby.userLimit / 2);
-
         const captain1 = Random.arrayElement(topHalf);
-
         const capt1Index = topHalf.indexOf(captain1);
-
         topHalf.splice(capt1Index, 1);
-
         const captain2 = Random.arrayElement(topHalf);
 
         // set captains for their teams

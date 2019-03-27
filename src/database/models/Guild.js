@@ -6,7 +6,8 @@ class Guild {
       mod: [],
       rank: [],
       muted: null,
-      reporters: null
+      reporters: null,
+      registered: null
     };
 
     this.channels = {

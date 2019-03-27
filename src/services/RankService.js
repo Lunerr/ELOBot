@@ -19,7 +19,6 @@ class RankService {
         const leaderboard = await client.db.leaderboardRepo.findOne({ guildId: member.guild.id, name: dbUser.displayedLb });
 
         if (leaderboard !== null) {
-
           const dbLeaderboard = await client.db.leaderboardRepo.getLeaderboard(member.guild.id, dbUser.displayedLb);
           const lbUserNickname = dbLeaderboard.users.find(x => x.userId === member.id);
 
