@@ -30,7 +30,7 @@ class Register extends patron.Command {
         return msg.createErrorReply('you are not allowed to re-register');
       }
 
-      await msg.member.roles.addRole(msg.dbGuild.roles.registered);
+      await msg.member.roles.add(msg.dbGuild.roles.registered);
       await msg.client.db.userRepo.updateUser(msg.author.id, msg.guild.id, { $set: { username: username }});
 
       await msg.channel.createMessage('You have re-registered.\n**Name:** ' + msg.dbUser.username + ' => ' + username + '\nRole\'s have been updated\nStats have been saved.');
