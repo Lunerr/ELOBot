@@ -35,8 +35,6 @@ class AddMaps extends patron.Command {
       reply += maps[i] + ', ';
     }
 
-    console.log('3');
-
     return msg.channel.createMessage('Success, Lobby Map list is now:\n' + reply.substring(0, reply.length - 2));
   }
 }

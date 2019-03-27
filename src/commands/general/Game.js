@@ -40,7 +40,7 @@ class Game extends patron.Command {
       return msg.createErrorReply('this lobby channel isn\'t assigned to a leaderboard.');
     }
 
-    if (!msg.member.roles.find(x => x.id === '499981512205139993')) {
+    if (!msg.member.roles.find(x => x.id === msg.dbGuild.roles.reporters)) {
       return msg.createErrorReply('you are not a score reporter.');
     }
 
